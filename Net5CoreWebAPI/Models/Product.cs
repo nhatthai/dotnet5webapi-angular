@@ -7,5 +7,9 @@ namespace Net5CoreWebAPI.Models
         public string ProductName { get; set; }
 
         public string Code { get; set; }
+
+        public decimal Price { get; set; }
+
+        public DateTime DateCreated { get; set; }
     }
 }
