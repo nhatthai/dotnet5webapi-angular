@@ -1,0 +1,106 @@
+name: $(Build.DefinitionName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+  batch: false
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: windows-latest
+
+stages:
+  - stage: build
+    displayName: Build and Package
+    jobs:
+      - job: 'Build'
+        displayName: Build and Package
+        steps:
+          - task: NodeTool@0
+            displayName: 'Install Node'
+            inputs:
+              versionSpec: 14.x
+
+          - task: Npm@1
+            displayName: 'Install NPM'
+            inputs:
+              verbose: false
+
+          - task: Npm@1
+            displayName: 'Install Angular CLI'
+            inputs:
+              command: custom
+              verbose: false
+              customCommand: 'install -g @angular/cli'
+
+          - script: |
+              ng build --prod --base-href /items/
+            displayName: 'Build Angular'
+
+          - task: ArchiveFiles@2
+            displayName: Zip Build Artifacts
+            inputs:
+              rootFolderOrFile: ./dist/
+              includeRootFolder: false
+              archiveFile: $(build.artifactstagingdirectory)/$(Build.BuildNumber).zip
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish Artifacts'
+            inputs:
+              pathtoPublish: '$(build.artifactstagingdirectory)/$(Build.BuildNumber).zip'
+              artifactName: 'drop'
+
+  - stage: test
+    displayName: Deploy to Test Environment
+    variables:
+      - group: Test - Auth0
+    jobs:
+      - deployment: DeployAngularWebApplication
+        displayName: Deploy Angular Web Application
+        environment:
+          name: 'Test'
+          resourceType: VirtualMachine
+          tags: 'internal-hosted-web'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: ExtractFiles@1
+                  displayName: Unzip Deployment Payload
+                  inputs:
+                    archiveFilePatterns: '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber).zip'
+                    destinationFolder: '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber)'
+
+                - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+                  displayName: 'Replace tokens'
+                  inputs:
+                    targetFiles: '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber)\ClientApp\main*.js'
+                    keepToken: true
+                    verbosity: 'detailed'
+                    actionOnMissing: 'warn'
+                    tokenPrefix: '#{'
+                    tokenSuffix: '}#'
+
+                - task: IISWebAppManagementOnMachineGroup@0
+                  displayName: IIS Web Application Manage
+                  inputs:
+                    IISDeploymentType: 'IISWebsite'
+                    ActionIISWebsite: 'CreateOrUpdateWebsite'
+                    ActionIISApplicationPool: 'CreateOrUpdateAppPool'
+                    WebsiteName: Default Web Site
+                    PipeLineMode: Integrated
+                    PhysicalPathForVd: '%SystemDrive%\Code\ServerIIS'
+
+                - task: IISWebAppDeploymentOnMachineGroup@0
+                  inputs:
+                    WebsiteName: Default Web Site
+                    VirtualApplication: items
+                    Package: '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber)\ClientApp\'
+
+                - task: PowerShell@2
+                  displayName: Apply Retention Policy
+                  inputs:
+                    targetType: inline
+                    script: |
+                      Remove-Item '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber).zip' -Force -Recurse;
+                      Remove-Item '$(Agent.BuildDirectory)\drop\$(Build.BuildNumber)' -Force -Recurse;
