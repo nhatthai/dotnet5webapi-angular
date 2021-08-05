@@ -1,13 +1,23 @@
 version: '3'
 
 services:
-  webapi:
-    container_name: webapi
-    build:
-      context: .
-      dockerfile: Net5CoreWebAPI/Dockerfile
-    restart: always
-    ports:
-      - 5000:80
-    depends_on:
-      - db
+    webapi:
+        container_name: webapi
+        build:
+            context: .
+            dockerfile: Net5CoreWebAPI/Dockerfile
+        restart: always
+        ports:
+            - 5000:80
+
+    frontend:
+        container_name: clientapp
+        build:
+            context: .
+            dockerfile: ClientApp/Dockerfile
+        restart: always
+        volumes:
+            - ./ClientApp:/app
+        ports:
+            - 4200:4200
+        command: npm start
