@@ -14,7 +14,7 @@ services:
         container_name: clientapp
         build:
             context: .
-            dockerfile: ClientApp/Dockerfile
+            dockerfile: ClientApp/Dockerfile-Development
         restart: always
         volumes:
             - ./ClientApp:/app
