@@ -1,9 +1,11 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Net5CoreWebAPI.Models;
+
 
 namespace Net5CoreWebAPI.Controllers
 {
@@ -18,21 +20,71 @@ namespace Net5CoreWebAPI.Controllers
             _logger = logger;
         }
 
-        //[HttpGet]
-        //public IEnumerable<Product> Get()
-        //{
-        //    return Ok();
-        //}
+        [HttpGet]
+        //[Authorize]
+        public ActionResult<ResponseModel> GetProducts([FromQuery] RequestModel requestModel)
+        {
+            try
+            {
+                var clients = new string[] {
+                    "Shoes",
+                    "Clothes",
+                    "Paint",
+                    "Short",
+                    "Hat",
+                    "Neckline",
+                    "Demo",
+                    "Brace",
+                    "Table",
+                    "Chair",
+                    "Keyboard",
+                    "Mouse",
+                    "Monitor",
+                    "CPU",
+                    "VGA",
+                    "Chip",
+                    "Phone",
+                    "Watch",
+                    "Lipper"
+                };
 
-        //// GET api/products
-        /// <summary>
-        /// Get products.
-        /// </summary>
-        /// <returns></returns>
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<Product>>> Get()
-        //{
-        //    return new ObjectResult();
-        //}
+                Random rnd = new();
+                DateTime startDate = new DateTime(2019, 1, 1);
+                var mockData = clients.Select(c => new Product()
+                {
+                    ProductId = rnd.Next(100, 290),
+                    ProductName = c,
+                    Code = rnd.Next(10000, 99999).ToString(),
+                    Price = rnd.Next(1000, 90000),
+                    Quality = rnd.Next(100, 9000),
+                    DateCreated = DateTime.UtcNow,
+                }).OrderBy(c => c.ProductId).ToList();
+
+                // Return all as default. Otherwise, handle for pagination
+                if (requestModel.PageSize <= 0)
+                {
+                    return Ok(mockData);
+                }
+
+
+                // handle pagination
+                var products = mockData.Skip(requestModel.PageIndex * requestModel.PageSize)
+                    .Take(requestModel.PageSize)
+                    .ToList();
+
+                var productsResponse = new ResponseModel
+                {
+                    total = mockData.Count(),
+                    results = products
+                };
+
+                return Ok(productsResponse);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest();
+            }
+        }
     }
 }

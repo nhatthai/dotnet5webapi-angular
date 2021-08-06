@@ -1,3 +1,5 @@
+using System;
+
 namespace Net5CoreWebAPI.Models
 {
     public class Product
@@ -9,6 +11,8 @@ namespace Net5CoreWebAPI.Models
         public string Code { get; set; }
 
         public decimal Price { get; set; }
+
+        public int Quality {get; set;}
 
         public DateTime DateCreated { get; set; }
     }
