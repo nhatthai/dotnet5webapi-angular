@@ -4,4 +4,4 @@ WORKDIR /app
 COPY ./ClientApp/ /app
 RUN npm install
 RUN npm install @angular/cli
-EXPOSE 4200
+RUN npm build --prod
