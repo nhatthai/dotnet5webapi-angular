@@ -32,7 +32,7 @@ namespace Net5CoreWebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Net5CoreWebAPI", Version = "v1" });
             });
 
-            // 1. Add Authentication Services
+            // Add Authentication Services with Auth0
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

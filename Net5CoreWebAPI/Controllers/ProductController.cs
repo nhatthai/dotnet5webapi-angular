@@ -45,7 +45,28 @@ namespace Net5CoreWebAPI.Controllers
                     "Chip",
                     "Phone",
                     "Watch",
-                    "Lipper"
+                    "Lipper",
+                    "Bridal",
+                    "Sunglasses",
+                    "Bow tie",
+                    "Ring",
+                    "Boots",
+                    "Cap",
+                    "High heels",
+                    "Bracelet",
+                    "Earmuffs",
+                    "Scarf",
+                    "Hairpin",
+                    "Mittens",
+                    "Gloves",
+                    "Belt",
+                    "Handbag",
+                    "fridge",
+                    "pot",
+                    "blender",
+                    "dishwasher",
+                    "mircowave",
+                    "sink"
                 };
 
                 Random rnd = new();
@@ -56,7 +77,7 @@ namespace Net5CoreWebAPI.Controllers
                     ProductName = c,
                     Code = rnd.Next(10000, 99999).ToString(),
                     Price = rnd.Next(1000, 90000),
-                    Quality = rnd.Next(100, 9000),
+                    Quantity = rnd.Next(100, 9000),
                     DateCreated = DateTime.UtcNow,
                 }).OrderBy(c => c.ProductId).ToList();
 

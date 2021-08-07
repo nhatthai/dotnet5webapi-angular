@@ -6,6 +6,6 @@ namespace Net5CoreWebAPI.Models
     {
         public int total { get; set; }
 
-        public IEnumerable<object> results { get; set; }
+        public IEnumerable<Product> results { get; set; }
     }
 }
