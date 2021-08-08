@@ -3,3 +3,5 @@ Net5CoreWebAPI/bin/*
 **/obj/*
 
 **/node_modules/*
+
+data/*

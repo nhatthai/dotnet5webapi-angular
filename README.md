@@ -10,6 +10,9 @@ Using .Net5 Web API and Angular 12.1.3 with NgRx
 + Docker, docker-compose and Kubernetes
 
 ### Development: Using docker compose in development environment(local)
++ Build webapi
+    `docker-compose build webapi`
+
 + Build web api and client app
     `docker-compose build`
 
