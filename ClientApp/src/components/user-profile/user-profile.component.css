@@ -1,0 +1,14 @@
+.menu-content {
+    padding: 7px 15px;
+    max-width: 300px;
+    min-width: 230px;
+}
+
+.menu-content h4 {
+    margin: 0;
+}
+
+.btn-signout {
+    text-decoration: underline;
+    color: var(--color-aurora);
+}

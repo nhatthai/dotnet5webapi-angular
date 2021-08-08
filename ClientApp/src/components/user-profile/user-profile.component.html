@@ -1,0 +1,26 @@
+<div *ngIf="auth.user$ | async as user">
+    <div class="d-flex align-items-center" [matMenuTriggerFor]="menu" *ngIf="((auth.isAuthenticated$ | async) === true)">
+        <div>
+            <span class="mb-0 text-sm  font-weight-bold text-dark">{{ user.name }}</span>
+        </div>
+
+        <button mat-icon-button  aria-label="Example icon-button with a menu">
+            <img [src]="user.picture" class="rounded-circle" height="25" alt="" loading="lazy" />
+        </button>
+    </div>
+
+    <mat-menu #menu="matMenu">
+        <div class="menu-content">
+            <div class="d-flex justify-content-between pb-spacing">
+                <a href="#" (click)="logout()" class="btn-signout">Sign out</a>
+            </div>
+            <div class="d-flex">
+                <img [src]="user.picture" class="rounded-circle me-spacing" height="80" alt="" loading="lazy" />
+                <div>
+                    <h4 class="text-md">{{ user.name }}</h4>
+                    <span class="text-sm">{{ user.email }}</span>
+                </div>
+            </div>
+        </div>
+    </mat-menu>
+</div>

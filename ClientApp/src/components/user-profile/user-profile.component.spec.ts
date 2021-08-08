@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AuthModule } from '@auth0/auth0-angular';
 
-import { NavBarComponent } from './nav-bar.component';
+import { UserProfileComponent } from './user-profile.component';
 import { environment as env } from '../../environments/environment';
 
-describe('NavBarComponent', () => {
-  let component: NavBarComponent;
-  let fixture: ComponentFixture<NavBarComponent>;
+describe('UserProfileComponent', () => {
+  let component: UserProfileComponent;
+  let fixture: ComponentFixture<UserProfileComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NavBarComponent ],
+      declarations: [ UserProfileComponent ],
       imports: [
         AuthModule.forRoot({
           domain: env.auth.domain,
@@ -23,7 +23,7 @@ describe('NavBarComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NavBarComponent);
+    fixture = TestBed.createComponent(UserProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

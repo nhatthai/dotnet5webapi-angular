@@ -1,0 +1,22 @@
+.mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+}
+
+.bg-custom {
+    background-color: var(--color-lakeside);
+}
+
+.navbar-logo {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.mat-toolbar .navbar-left,
+.mat-toolbar .navbar-right {
+    display: flex;
+}
