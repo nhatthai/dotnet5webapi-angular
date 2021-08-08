@@ -1,0 +1,4 @@
+<div class="container" *ngIf="(auth.isAuthenticated$ | async) === false" >
+    <h3>Homepage</h3>
+    <app-product-table></app-product-table>
+</div>
