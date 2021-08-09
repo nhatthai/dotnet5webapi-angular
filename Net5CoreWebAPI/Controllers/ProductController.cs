@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Net5CoreWebAPI.Models;
-
+using Net5CoreWebAPI.Services;
 
 namespace Net5CoreWebAPI.Controllers
 {
@@ -14,88 +14,27 @@ namespace Net5CoreWebAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly ILogger<ProductController> _logger;
+        private readonly ProductService _productService;
 
-        public ProductController(ILogger<ProductController> logger)
+        public ProductController(ProductService productService, ILogger<ProductController> logger)
         {
             _logger = logger;
+            _productService = productService;
         }
 
         [HttpGet]
         //[Authorize]
-        public ActionResult<ResponseModel> GetProducts([FromQuery] RequestModel requestModel)
+        public async Task<ActionResult<ResponseModel>> GetProductsAsync([FromQuery] RequestModel requestModel)
         {
             try
             {
-                var clients = new string[] {
-                    "Shoes",
-                    "Clothes",
-                    "Paint",
-                    "Short",
-                    "Hat",
-                    "Neckline",
-                    "Demo",
-                    "Brace",
-                    "Table",
-                    "Chair",
-                    "Keyboard",
-                    "Mouse",
-                    "Monitor",
-                    "CPU",
-                    "VGA",
-                    "Chip",
-                    "Phone",
-                    "Watch",
-                    "Lipper",
-                    "Bridal",
-                    "Sunglasses",
-                    "Bow tie",
-                    "Ring",
-                    "Boots",
-                    "Cap",
-                    "High heels",
-                    "Bracelet",
-                    "Earmuffs",
-                    "Scarf",
-                    "Hairpin",
-                    "Mittens",
-                    "Gloves",
-                    "Belt",
-                    "Handbag",
-                    "fridge",
-                    "pot",
-                    "blender",
-                    "dishwasher",
-                    "mircowave",
-                    "sink"
-                };
-
-                Random rnd = new();
-                DateTime startDate = new DateTime(2019, 1, 1);
-                var mockData = clients.Select(c => new Product()
-                {
-                    ProductId = rnd.Next(100, 290),
-                    ProductName = c,
-                    Code = rnd.Next(10000, 99999).ToString(),
-                    Price = rnd.Next(1000, 90000),
-                    Quantity = rnd.Next(100, 9000),
-                    DateCreated = DateTime.UtcNow,
-                }).OrderBy(c => c.ProductId).ToList();
-
-                // Return all as default. Otherwise, handle for pagination
-                if (requestModel.PageSize <= 0)
-                {
-                    return Ok(mockData);
-                }
-
-
-                // handle pagination
-                var products = mockData.Skip(requestModel.PageIndex * requestModel.PageSize)
+                var results = await _productService.GetProducts();
+                var products = results.Skip(requestModel.PageIndex * requestModel.PageSize)
                     .Take(requestModel.PageSize)
                     .ToList();
-
                 var productsResponse = new ResponseModel
                 {
-                    total = mockData.Count(),
+                    total = products.Count(),
                     results = products
                 };
 
@@ -107,5 +46,33 @@ namespace Net5CoreWebAPI.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Product>> GetByIdAsync(string id)
+        {
+            var product = await _productService.GetProduct(id);
+            
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return product;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Product>> Create(Product product)
+        {
+            await _productService.Create(product);
+            return new OkObjectResult(product);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<Product>> Update(Product product)
+        {
+            var updatedProduct = await _productService.Update(product);
+            return new OkObjectResult(updatedProduct);
+        }
+
     }
 }

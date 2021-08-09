@@ -1,10 +1,14 @@
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 
 namespace Net5CoreWebAPI.Models
 {
     public class Product
     {
-        public int ProductId { get; set; }
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string ProductId { get; set; }
 
         public string ProductName { get; set; }
 

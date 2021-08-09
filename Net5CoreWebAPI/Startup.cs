@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Net5CoreWebAPI.Models;
+using Net5CoreWebAPI.Services;
 
 
 namespace Net5CoreWebAPI
@@ -21,6 +24,14 @@ namespace Net5CoreWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<ProductstoreDatabaseSettings>(
+                Configuration.GetSection(nameof(ProductstoreDatabaseSettings)));
+
+            services.AddSingleton<IProductstoreDatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<ProductstoreDatabaseSettings>>().Value);
+
+            services.AddScoped<ProductService>();
+
             services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
@@ -39,8 +50,11 @@ namespace Net5CoreWebAPI
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(options =>
             {
-                options.Authority = "https://dev-i5eh5nau.us.auth0.com/";
-                options.Audience = "https://localhost:44357/api";
+                // https://dev-i5eh5nau.us.auth0.com/";
+                options.Authority = Configuration["Auth0:Authority"];
+
+                // "https://localhost:44357/api";
+                options.Audience = Configuration["Auth0:Audience"];
             });
         }
 
