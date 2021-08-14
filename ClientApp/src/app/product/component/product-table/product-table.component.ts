@@ -1,8 +1,7 @@
 import { Component, AfterViewInit, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable, Subject, Subscription } from 'rxjs';
-// import { debounceTime, map, distinctUntilChanged, tap } from "rxjs/operators";
+import { Observable,  Subscription } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { Product } from '../../core/models/product';
 import { ProductParams } from '../../core/models/product-params';
@@ -11,7 +10,7 @@ import {
   selectProductTotal,
   selectProductError,
   selectProductLoading } from '../../store/product.selectors';
-import { ProductLoadAction } from '../../store/product.actions';
+import { ProductLoadAction, ProductUpdateAction, ProductDeleteAction } from '../../store/product.actions';
 import { GlobalState } from '../../store/global.states';
 
 @Component({
@@ -25,7 +24,8 @@ export class ProductTableComponent implements OnInit, OnDestroy, AfterViewInit {
     'name',
     'code',
     'dateCreated',
-    'quantity'
+    'quantity',
+    'action'
   ];
 
   dataSource: MatTableDataSource<Product>;
@@ -34,11 +34,10 @@ export class ProductTableComponent implements OnInit, OnDestroy, AfterViewInit {
   loading?: boolean;
   productTotal?: number;
   pageEvent?: PageEvent;
-  filterSubject = new Subject<Event>();
 
   private subscription: Subscription = new Subscription();
 
-  @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator?: MatPaginator;
 
   constructor(public store: Store<GlobalState>) {
     // Assign the data to the data source for the table to render
@@ -75,6 +74,16 @@ export class ProductTableComponent implements OnInit, OnDestroy, AfterViewInit {
   handlePagination(event?: any) {
     this.loadProducts();
     return event;
+  }
+
+  update(productId: string): void {
+    console.log("update", productId);
+    // TODO: show popup model and then update values
+  }
+
+  delete(productId: string) {
+    console.log("delete", productId);
+    this.store.dispatch(new ProductDeleteAction(productId));
   }
 
   private loadProducts() {

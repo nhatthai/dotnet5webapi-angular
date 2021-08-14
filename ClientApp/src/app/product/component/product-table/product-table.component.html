@@ -28,6 +28,19 @@
             <td mat-cell *matCellDef="let row">{{row.dateCreated | date}}</td>
         </ng-container>
 
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>
+                Action
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <button mat-fab color="primary" aria-label=""  (click)="update(row.productId)">
+                    <mat-icon style="font-size: 20px">edit</mat-icon>
+                </button>
+                <button mat-fab color="warn" aria-label="" (click)="delete(row.productId)">
+                    <mat-icon style="font-size: 20px">delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
 
         <!-- Row shown when there is no matching data. -->
         <ng-container matColumnDef="noData">
