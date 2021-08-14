@@ -26,6 +26,28 @@ export function productReducer(state = initialProductState, action: ProductActio
       });
     }
 
+    case ProductActionTypes.CreateProduct: {
+      return ProductAdapter.addOne(action.product, {
+        ...state,
+        loading: false
+      });
+    }
+
+    case ProductActionTypes.UpdateProduct: {
+      return ProductAdapter.updateOne(action.product, {
+        ...state,
+        loading: false
+      });
+    }
+
+    case ProductActionTypes.DeleteProduct: {
+      return ProductAdapter.removeOne(action.productId, {
+        ...state,
+        error: false,
+        loading: false
+      });
+    }
+
     default:
       return state;
   }

@@ -18,7 +18,6 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
     this.auth.isAuthenticated$.subscribe(async isAuthenticated => {
       if (isAuthenticated) {
         this.auth.getAccessTokenSilently().subscribe(token => {
-          env.auth.token = token;
           localStorage.setItem('access_token', token);
         });
       }
@@ -26,6 +25,7 @@ export class UserProfileComponent implements OnInit, AfterViewInit {
   }
 
   logout(): void {
+    localStorage.removeItem('access_token');
     this.auth.logout({returnTo: env.auth.redirectUri});
   }
 }
