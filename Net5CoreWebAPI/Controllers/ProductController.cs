@@ -32,9 +32,10 @@ namespace Net5CoreWebAPI.Controllers
                 var products = results.Skip(requestModel.PageIndex * requestModel.PageSize)
                     .Take(requestModel.PageSize)
                     .ToList();
+
                 var productsResponse = new ResponseModel
                 {
-                    total = products.Count(),
+                    total = results.Count(),
                     results = products
                 };
 
@@ -51,7 +52,7 @@ namespace Net5CoreWebAPI.Controllers
         public async Task<ActionResult<Product>> GetByIdAsync(string id)
         {
             var product = await _productService.GetProduct(id);
-            
+
             if (product == null)
             {
                 return NotFound();
@@ -63,16 +64,47 @@ namespace Net5CoreWebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> Create(Product product)
         {
-            await _productService.Create(product);
-            return new OkObjectResult(product);
+            try
+            {
+                await _productService.Create(product);
+                return new OkObjectResult(product);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
         }
 
         [HttpPut]
         public async Task<ActionResult<Product>> Update(Product product)
         {
-            var updatedProduct = await _productService.Update(product);
-            return new OkObjectResult(updatedProduct);
+            try
+            {
+                var updatedProduct = await _productService.Update(product);
+                return new OkObjectResult(updatedProduct);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
         }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            try
+            {
+                _logger.LogInformation("Delete", id);
+                await _productService.Delete(id);
+                return new OkResult();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return BadRequest();
+            }
+        }
     }
 }

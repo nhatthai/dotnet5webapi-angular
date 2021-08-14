@@ -34,7 +34,7 @@ namespace Net5CoreWebAPI.Services
             await _products.InsertOneAsync(product);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> Delete(string id)
         {
             DeleteResult deleteResult = await _products.DeleteOneAsync(product => product.ProductId.Equals(id));
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
