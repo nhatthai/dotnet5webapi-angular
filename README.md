@@ -1,8 +1,8 @@
-# .NET5 Core Web API And Angular 12.1.3 with NgRx
-Using .Net5 Web API and Angular 12.1.3 with NgRx
-+ .NET 5 Core Web API(Net5CoreWebAPI)
+# .NET5 Core Web API And Angular 12.2 with NgRx
+Using .Net5 Web API and Angular 12.2 with NgRx
++ Net5CoreWebAPI(.NET 5 Core Web API)
     - Auth0
-+ Angular 12.1.3(ClientApp)
++ ClientApp(Angular 12.2)
     - Angular Material
     - NgRx
     - Auth0
