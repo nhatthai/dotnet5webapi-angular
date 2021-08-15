@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 import { ProductParams } from '../core/models/product-params';
 import { ProductResponse, CommonResponse } from '../core/models/product-response';
+import { Product } from'../core/models/product';
 
 export enum ProductActionTypes {
   Loading = '[Product] Loading',
@@ -9,7 +10,8 @@ export enum ProductActionTypes {
   UpdateProduct = '[Product] UpdateProduct',
   DeleteProduct = '[Product] Delete Product',
   CreateProduct = '[Product] Create Product',
-  CommonLoadSuccess = 'Common LoadSuccess'
+  CommonLoadSuccess = 'Common LoadSuccess',
+  SaveSuccess = '[Product] Save Product'
 }
 
 export class ProductLoadAction implements Action {
@@ -29,7 +31,7 @@ export class ProductLoadFailAction implements Action {
 
 export class ProductUpdateAction implements Action {
   public readonly type = ProductActionTypes.UpdateProduct;
-  constructor(public product: any) {}
+  constructor(public product: Product) {}
 }
 
 export class ProductDeleteAction implements Action {
@@ -39,7 +41,7 @@ export class ProductDeleteAction implements Action {
 
 export class ProductCreateAction implements Action {
   public readonly type = ProductActionTypes.CreateProduct;
-  constructor(public product: any) {}
+  constructor(public product: Product) {}
 }
 
 export class CommonLoadSuccessAction implements Action {
@@ -47,5 +49,11 @@ export class CommonLoadSuccessAction implements Action {
   constructor(public payload: CommonResponse) {}
 }
 
+export class ProductSaveSuccessAction implements Action {
+  public readonly type = ProductActionTypes.SaveSuccess;
+  constructor(public product: Product) {}
+}
+
 export type ProductAction = ProductLoadAction | ProductLoadSuccessAction | ProductLoadFailAction
-  | ProductUpdateAction | ProductDeleteAction | ProductCreateAction | CommonLoadSuccessAction;
+  | ProductUpdateAction | ProductDeleteAction | ProductCreateAction | CommonLoadSuccessAction
+  | ProductSaveSuccessAction;

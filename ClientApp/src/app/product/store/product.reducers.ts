@@ -29,14 +29,16 @@ export function productReducer(state = initialProductState, action: ProductActio
     case ProductActionTypes.CreateProduct: {
       return ProductAdapter.addOne(action.product, {
         ...state,
-        loading: false
+        loading: false,
+        product: action.product
       });
     }
 
     case ProductActionTypes.UpdateProduct: {
-      return ProductAdapter.updateOne(action.product, {
+      return ProductAdapter.updateOne({ id: action.product.productId, changes: action.product }, {
         ...state,
-        loading: false
+        loading: false,
+        product: action.product
       });
     }
 

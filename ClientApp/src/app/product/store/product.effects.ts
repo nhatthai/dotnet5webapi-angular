@@ -6,7 +6,8 @@ import {
   ProductActionTypes, ProductLoadAction,
   ProductLoadFailAction, ProductUpdateAction,
   ProductDeleteAction, ProductCreateAction,
-  ProductLoadSuccessAction, CommonLoadSuccessAction
+  ProductLoadSuccessAction, CommonLoadSuccessAction,
+  ProductSaveSuccessAction
 } from './product.actions';
 import { ProductService } from "../services/product.service";
 import { ProductParams } from '../core/models/product-params';
@@ -47,7 +48,7 @@ export class ProductEffects {
       map(action => action.product),
       switchMap((product: Product) =>
         this.service.createProduct(product).pipe(
-          //map((response: ProductResponse) => new ProductLoadSuccessAction(response)),
+          map((response: Product) => new ProductSaveSuccessAction(response)),
           catchError((error) => of(new ProductLoadFailAction(error)))
         )
       )
@@ -59,7 +60,7 @@ export class ProductEffects {
       map(action => action.product),
       switchMap((product: Product) =>
         this.service.updateProduct(product).pipe(
-          map((response: ProductResponse) => new ProductLoadSuccessAction(response)),
+          map((response: Product) => new ProductSaveSuccessAction(response)),
           catchError((error) => of(new ProductLoadFailAction(error)))
         )
       )

@@ -32,7 +32,7 @@ export class ProductService {
     return this.httpClient.post<Product>(`${this.baseAPIURL}/product`, product).pipe();
   }
 
-  public updateProduct(product: Product): Observable<any> {
+  public updateProduct(product: Product): Observable<Product> {
     return this.httpClient.put<Product>(`${this.baseAPIURL}/product/${product.productId}`, product).pipe();
   }
 

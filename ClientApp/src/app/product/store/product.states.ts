@@ -5,6 +5,7 @@ export interface ProductState extends EntityState<Product> {
   error: boolean;
   loading: boolean;
   total: number;
+  product: any;
 }
 
 export const ProductAdapter: EntityAdapter<Product> = createEntityAdapter<Product>({
@@ -15,4 +16,5 @@ export const initialProductState: ProductState = ProductAdapter.getInitialState(
   error: false,
   loading: true,
   total: 0,
+  product: null
 });
