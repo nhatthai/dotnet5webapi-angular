@@ -1,3 +1,9 @@
+<section>
+    <div class="example-button-row">
+      <button mat-raised-button color="primary" (click)="add()">Add Product</button>
+    </div>
+</section>
+<br/>
 <div class="mat-elevation-z8 auto-scroll">
     <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="productId">
@@ -13,6 +19,11 @@
         <ng-container matColumnDef="code">
             <th mat-header-cell *matHeaderCellDef>Code</th>
             <td mat-cell *matCellDef="let row">{{row.code}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>Price</th>
+            <td mat-cell *matCellDef="let row">{{row.price}}</td>
         </ng-container>
 
         <ng-container matColumnDef="quantity">
@@ -33,7 +44,7 @@
                 Action
             </th>
             <td mat-cell *matCellDef="let row">
-                <button mat-fab color="primary" aria-label=""  (click)="update(row.productId)">
+                <button mat-fab color="primary" aria-label=""  (click)="update(row)">
                     <mat-icon style="font-size: 20px">edit</mat-icon>
                 </button>
                 <button mat-fab color="warn" aria-label="" (click)="delete(row.productId)">

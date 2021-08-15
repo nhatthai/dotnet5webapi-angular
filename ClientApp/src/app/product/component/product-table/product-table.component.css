@@ -51,4 +51,25 @@ th.mat-sort-header-sorted {
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
+
+
+}
+
+.mat-cell > .mat-column-productId {
+    width: 15%;
+}
+
+.mat-column-productId {
+    flex: 0 0 15% !important;
+    width: 15% !important;
+}
+
+.mat-column-productName {
+    flex: 0 0 25% !important;
+    width: 25% !important;
+}
+
+.mat-column-code {
+    flex: 0 0 20% !important;
+    width: 20% !important;
 }

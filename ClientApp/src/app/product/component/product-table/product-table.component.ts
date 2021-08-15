@@ -10,8 +10,10 @@ import {
   selectProductTotal,
   selectProductError,
   selectProductLoading } from '../../store/product.selectors';
-import { ProductLoadAction, ProductUpdateAction, ProductDeleteAction } from '../../store/product.actions';
+import { ProductLoadAction, ProductDeleteAction } from '../../store/product.actions';
 import { GlobalState } from '../../store/global.states';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
 
 @Component({
   selector: 'app-product-table',
@@ -24,6 +26,7 @@ export class ProductTableComponent implements OnInit, OnDestroy, AfterViewInit {
     'name',
     'code',
     'dateCreated',
+    'price',
     'quantity',
     'action'
   ];
@@ -39,7 +42,7 @@ export class ProductTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild(MatPaginator, { static: true }) paginator?: MatPaginator;
 
-  constructor(public store: Store<GlobalState>) {
+  constructor(public store: Store<GlobalState>, public dialog: MatDialog) {
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource<Product>([]);
   }
@@ -76,14 +79,24 @@ export class ProductTableComponent implements OnInit, OnDestroy, AfterViewInit {
     return event;
   }
 
-  update(productId: string): void {
-    console.log("update", productId);
-    // TODO: show popup model and then update values
+  update(data: any): void {
+    this.showPopup(data);
+  }
+
+  add(): void {
+    this.showPopup(null);
   }
 
   delete(productId: string) {
-    console.log("delete", productId);
     this.store.dispatch(new ProductDeleteAction(productId));
+  }
+
+  private showPopup(data: any) {
+    this.dialog.open(ProductDialogComponent, {
+      height: '500px',
+      width: '260px',
+      data: data
+    });
   }
 
   private loadProducts() {
