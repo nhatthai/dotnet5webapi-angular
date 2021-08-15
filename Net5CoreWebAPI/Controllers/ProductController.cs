@@ -58,7 +58,7 @@ namespace Net5CoreWebAPI.Controllers
                 return NotFound();
             }
 
-            return product;
+            return Ok(product);
         }
 
         [HttpPost]
@@ -67,7 +67,7 @@ namespace Net5CoreWebAPI.Controllers
             try
             {
                 await _productService.Create(product);
-                return new OkObjectResult(product);
+                return Ok(product);
             }
             catch(Exception ex)
             {
@@ -76,13 +76,13 @@ namespace Net5CoreWebAPI.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<ActionResult<Product>> Update(Product product)
         {
             try
             {
                 var updatedProduct = await _productService.Update(product);
-                return new OkObjectResult(updatedProduct);
+                return Ok(updatedProduct);
             }
             catch(Exception ex)
             {
@@ -98,7 +98,7 @@ namespace Net5CoreWebAPI.Controllers
             {
                 _logger.LogInformation("Delete", id);
                 await _productService.Delete(id);
-                return new OkResult();
+                return Ok();
             }
             catch(Exception ex)
             {
