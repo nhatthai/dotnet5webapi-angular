@@ -1,6 +1,7 @@
 .vs/
 Net5CoreWebAPI/bin/*
 **/obj/*
+**/.idea/*
 
 **/node_modules/*
 

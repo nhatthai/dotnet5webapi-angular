@@ -7,6 +7,7 @@ Using .Net5 Web API and Angular 12.2 with NgRx
     - NgRx
     - Auth0
 + Auth0: authentication and authorize core webapi and client app
++ Mongodb
 + Docker, docker-compose and Kubernetes
 
 ### Development: Using docker compose in development environment(local)
