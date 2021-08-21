@@ -29,13 +29,14 @@ namespace Net5CoreWebAPI.Controllers
             try
             {
                 var results = await _productService.GetProducts();
-                var products = results.Skip(requestModel.PageIndex * requestModel.PageSize)
+                var enumerable = results.ToList();
+                var products = enumerable.Skip(requestModel.PageIndex * requestModel.PageSize)
                     .Take(requestModel.PageSize)
                     .ToList();
 
                 var productsResponse = new ResponseModel
                 {
-                    total = results.Count(),
+                    total = enumerable.Count,
                     results = products
                 };
 
@@ -49,6 +50,7 @@ namespace Net5CoreWebAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        //[Authorize]
         public async Task<ActionResult<Product>> GetByIdAsync(string id)
         {
             var product = await _productService.GetProduct(id);
@@ -62,6 +64,7 @@ namespace Net5CoreWebAPI.Controllers
         }
 
         [HttpPost]
+        //[Authorize]
         public async Task<ActionResult<Product>> Create(Product product)
         {
             try
@@ -77,6 +80,7 @@ namespace Net5CoreWebAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        //[Authorize]
         public async Task<ActionResult<Product>> Update(Product product)
         {
             try
@@ -92,6 +96,7 @@ namespace Net5CoreWebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        //[Authorize]
         public async Task<ActionResult> Delete(string id)
         {
             try

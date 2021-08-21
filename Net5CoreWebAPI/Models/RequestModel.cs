@@ -1,5 +1,3 @@
-using System;
-
 namespace Net5CoreWebAPI.Models
 {
     public class RequestModel

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Driver;
-using Microsoft.Extensions.Configuration;
 using Net5CoreWebAPI.Models;
 
 namespace Net5CoreWebAPI.Services
@@ -36,14 +35,14 @@ namespace Net5CoreWebAPI.Services
 
         public async Task<bool> Delete(string id)
         {
-            DeleteResult deleteResult = await _products.DeleteOneAsync(product => product.ProductId.Equals(id));
+            var deleteResult = await _products.DeleteOneAsync(product => product.ProductId.Equals(id));
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
         public async Task<bool> Update(Product productIn)
         {
-            ReplaceOneResult updateResult =
-                await _products.ReplaceOneAsync(product => product.ProductId == productIn.ProductId, productIn);
+            var updateResult = await _products.ReplaceOneAsync(
+                product => product.ProductId == productIn.ProductId, productIn);
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
         }
     }
