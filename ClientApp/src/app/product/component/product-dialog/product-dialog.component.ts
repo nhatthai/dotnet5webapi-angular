@@ -1,10 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import {FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { _isNumberValue } from '@angular/cdk/coercion';
+import { Store } from '@ngrx/store';
 import { Product } from '../../core/models/product';
 import { ProductUpdateAction, ProductCreateAction } from '../../store/product.actions';
-import { Store } from '@ngrx/store';
 import { GlobalState } from '../../store/global.states';
 
 
@@ -35,8 +36,8 @@ export class ProductDialogComponent implements OnInit {
       productId: [this.data?.productId],
       productName:  [this.data?.productName, [Validators.required]],
       code: [this.data?.code, [Validators.required]],
-      price:  [this.data?.price, [Validators.required]],
-      quantity:  [this.data?.quantity, [Validators.required]],
+      price:  [this.data?.price, [Validators.required, Validators.pattern("[1-9]\\d{9}")]],
+      quantity:  [this.data?.quantity, [Validators.required, Validators.pattern("[1-9]\\d{9}")]],
     });
   }
 
@@ -45,46 +46,50 @@ export class ProductDialogComponent implements OnInit {
       productId: new FormControl(),
 			productName: new FormControl('', [Validators.required]),
       code: new FormControl('', [Validators.required]),
-      price: new FormControl('', [Validators.required, Validators.pattern("[1-9]\d{9}")]),
-      quantity: new FormControl('', [Validators.required, Validators.pattern("[1-9]\d{9}")])
+      price: new FormControl('', [Validators.required, Validators.pattern("[1-9]\\d{9}")]),
+      quantity: new FormControl('', [Validators.required, Validators.pattern("[1-9]\\d{9}")])
 		});
 	}
 
   submitForm() {
-    var message = this.getErrorMessage();
-
-    if (message === '')
-    {
-      // create product
-      if (this.form?.get('productId')?.value === null) {
+    var message = this.validateFrom();
+    if (message === '') {
+      if(this.form?.get('productId')?.value === null) {
         this.store.dispatch(new ProductCreateAction(this.form?.value));
-      }
-      // update product
-      else {
+      } else {
         this.store.dispatch(new ProductUpdateAction(this.form?.value));
       }
       this.dialogRef.close();
     }
   }
 
-  getErrorMessage() {
+  validateFrom() {
+    var errorMessage = this.getErrorMessage('producName') + this.getErrorMessage('code') +
+      this.getErrorMessage('price') + this.getErrorMessage('quality');
+
+    return errorMessage;
+  }
+
+  getErrorMessage(fieldName: string) {
     let form = this.form;
 
-    if (form.get('productName')?.hasError('required')) {
+    if (form.get(fieldName)?.hasError('required')) {
       return 'You must enter a value';
     }
 
-    if (form.get('code')?.hasError('required')) {
-      return 'You must enter a value';
+    if(fieldName == 'price') {
+      if (!_isNumberValue(form.get('price')?.value)) {
+        return 'Price should be number';
+      }
+      // todo: remove mat-form-field-invalid
     }
 
-    if (form.get('price')?.hasError('required')) {
-      return 'You must enter a value';
+    if(fieldName == 'quantity') {
+      if(!_isNumberValue(form.get('quantity')?.value)) {
+        return 'Quantity should be number';
+      }
     }
 
-    if (form.get('quantity')?.hasError('required')) {
-      return 'You must enter a value';
-    }
     return '';
   }
 }
